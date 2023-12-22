@@ -12,9 +12,12 @@ app.config['SECRET_KEY'] = 'thisisasecretkey'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -53,6 +56,12 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -63,6 +72,7 @@ def login():
                 login_user(user)
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
+
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -77,18 +87,19 @@ def logout():
     return redirect(url_for('login'))
 
 
-#@ app.route('/register', methods=['GET', 'POST'])
-#def register():
-    # form = RegisterForm()
+@ app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
 
-    # if form.validate_on_submit():
-    #     hashed_password = bcrypt.generate_password_hash(form.password.data)
-    #     new_user = User(username=form.username.data, password=hashed_password)
-    #     db.session.add(new_user)
-    #     db.session.commit()
-    #     return redirect(url_for('login'))
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(username=form.username.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
 
-    # return render_template('register.html', form=form)
+    return render_template('register.html', form=form)
+
 
 if __name__ == "__main__":
-    app.run(port=8382)
+    app.run(debug=True)
