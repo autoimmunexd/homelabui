@@ -6,7 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="/static/server-solid.ico">
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    
     <title>Dashboard</title>
 </head>
 
@@ -28,7 +30,7 @@
             line-height: 24px;
             font-size: 24px;
             color: #62529c;
-            min-width: 360px;
+            min-width: 280px;
         }
 
         .text::after {
@@ -83,7 +85,13 @@
         }
 
         #plex,
-        #portainer {
+        #portainer,
+        #overseerr,
+        #sonarr,
+        #radarr,
+        #lidarr,
+        #metube,
+        #prowlarr {
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
@@ -97,6 +105,30 @@
             background-image: url('/static/portainer.png');
         }
 
+        #overseerr {
+            background-image: url('/static/overseerr.png');
+        }
+        
+        #sonarr {
+            background-image: url('/static/sonarr.png');
+        }
+
+        #radarr {
+            background-image: url('/static/radarr.png');
+        }
+
+        #lidarr {
+            background-image: url('/static/lidarr.png');
+        }
+
+        #metube {
+            background-image: url('/static/metube.png');
+        }
+
+        #prowlarr {
+            background-image: url('/static/prowlarr.png');
+        }
+
         p {
             color: #62529c;
             margin-top: 50px;
@@ -106,19 +138,254 @@
         .block {
             filter: saturate(60%);
         }
-    </style>
-    <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
-        <div class="text">noplacelike@127.0.0.1:~$ chmod +x homelab.sh</div>
-            <div hx-get="/uptime" hx-trigger="every 1s"></div>
-            <div hx-get="/utilization" hx-trigger="every 1s"></div>
-    </div>
-    <section>
-        <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
-            <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 auto-rows-fr md:gap-12 md:space-y-0 ">
+        .fakeButtons {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  position: relative;
+  top: 6px;
+  left: 6px;
+  background-color: #ff3b47;
+  border-color: #9d252b;
+  display: inline-block;
+}
 
-                <a id="plex"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="///https://192.168.1.144:9443/">
+.fakeMinimize {
+  left: 11px;
+  background-color: #ffc100;
+  border-color: #9d802c;
+}
+
+.fakeZoom {
+  left: 16px;
+  background-color: #00d742;
+  border-color: #049931;
+}
+
+.fakeMenu {
+  width: 550px;
+  box-sizing: border-box;
+  height: 25px;
+  background-color: #bbb;
+  margin: 0 auto;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  padding-bottom: 30px;
+}
+
+.fakeScreen {
+  background-color: #151515;
+  box-sizing: border-box;
+  width: 550px;
+  margin: 0 auto;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+
+
+span {
+  color: #fff;
+  font-weight: bold;
+}
+
+.line1 {
+  color: #9CD9F0;
+  -webkit-animation: type .5s 1s steps(20, end) forwards;
+  -moz-animation: type .5s 1s steps(20, end) forwards;
+  -o-animation: type .5s 1s steps(20, end) forwards;
+  animation: type .5s 1s steps(20, end) forwards;
+}
+
+.cursor1 {
+  -webkit-animation: blink 1s 2s 2 forwards;
+  -moz-animation: blink 1s 2s 2 forwards;
+  -o-animation: blink 1s 2s 2 forwards;
+  animation: blink 1s 2s 2 forwards;
+}
+
+.line2 {
+  color: #CDEE69;
+  -webkit-animation: type .5s 4.25s steps(20, end) forwards;
+  -moz-animation: type .5s 4.25s steps(20, end) forwards;
+  -o-animation: type .5s 4.25s steps(20, end) forwards;
+  animation: type .5s 4.25s steps(20, end) forwards;
+}
+
+.cursor2 {
+  -webkit-animation: blink 1s 5.25s 2 forwards;
+  -moz-animation: blink 1s 5.25s 2 forwards;
+  -o-animation: blink 1s 5.25s 2 forwards;
+  animation: blink 1s 5.25s 2 forwards;
+}
+
+.line3 {
+  color: #E09690;
+  -webkit-animation: type .5s 7.5s steps(20, end) forwards;
+  -moz-animation: type .5s 7.5s steps(20, end) forwards;
+  -o-animation: type .5s 7.5s steps(20, end) forwards;
+  animation: type .5s 7.5s steps(20, end) forwards;
+}
+
+.cursor3 {
+  -webkit-animation: blink 1s 8.5s 2 forwards;
+  -moz-animation: blink 1s 8.5s 2 forwards;
+  -o-animation: blink 1s 8.5s 2 forwards;
+  animation: blink 1s 8.5s 2 forwards;
+}
+
+.line4 {
+  color: #fff;
+  -webkit-animation: type .5s 10.75s steps(20, end) forwards;
+  -moz-animation: type .5s 10.75s steps(20, end) forwards;
+  -o-animation: type .5s 10.75s steps(20, end) forwards;
+  animation: type .5s 10.75s steps(20, end) forwards;
+}
+
+.cursor4 {
+  -webkit-animation: blink 1s 11.5s infinite;
+  -moz-animation: blink 1s 8.5s infinite;
+  -o-animation: blink 1s 8.5s infinite;
+  animation: blink 1s 8.5s infinite;
+}
+
+@-webkit-keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-o-keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes type {
+  to {
+    width: 17em;
+  }
+}
+
+@-moz-keyframes type {
+  to {
+    width: 17em;
+  }
+}
+
+@-o-keyframes type {
+  to {
+    width: 17em;
+  }
+}
+
+@keyframes type {
+  to {
+    width: 17em;
+  }
+}
+
+#terminal_content {
+    margin: none;
+    padding: none;
+}
+
+.live_data {
+    color: white;
+}
+    </style>
+
+
+<div class=fakeMenu>
+    <div class="fakeButtons fakeClose"></div>
+    <div class="fakeButtons fakeMinimize"></div>
+    <div class="fakeButtons fakeZoom"></div>
+  </div>
+  <div class="fakeScreen">
+    <div id="terminal_content" class="py-8 px-4 mx-auto max-w-screen-xl sm:py-6 lg:px-6">
+        <div class="terminal">
+        <div class="text">noplacelike@127.0.0.1:~$</div>
+        <div class="live_data">
+       <div hx-get="/uptime" hx-trigger="every 1s"></div>
+       <div hx-get="/utilization" hx-trigger="every 1s"></div>
+    </div>
+    </div>
+</div>
+  </div>
+
+
+
+
+  
+    
+    <section>
+        
+        <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-5 lg:px-6">
+            <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 auto-rows-fr md:gap-12 md:space-y-0 ">
+                
+                <a id="plex" href="{{ url_for('plex')}}"
+                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                     <p class="flex justify-center">Plex</p>
                     <div class="relative mb-10 w-6 h-12">
                         <div
@@ -129,8 +396,8 @@
                         </div>
                     </div>
                 </a>
-
-                <a id="portainer"
+            
+                <a id="portainer" href="{{ url_for('portainer')}}"
                     class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     href="192.168.1.144:9443">
                     <p class="flex justify-center">Portainer</p>
@@ -144,7 +411,7 @@
                     </div>
                 </a>
 
-                <a id="overseerr"
+                <a id="overseerr" href="{{ url_for('overseerr')}}"
                     class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     href="192.168.1.144:9443">
                     <p class="flex justify-center">Overseerr</p>
@@ -158,7 +425,7 @@
                     </div>
                 </a>
 
-                <a id="radarr"
+                <a id="radarr" href="{{ url_for('radarr')}}"
                     class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     href="192.168.1.144:9443">
                     <p class="flex justify-center">Radarr</p>
@@ -172,7 +439,7 @@
                     </div>
                 </a>
 
-                <a id="sonarr"
+                <a id="sonarr" href="{{ url_for('sonarr')}}"
                     class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     href="192.168.1.144:9443">
                     <p class="flex justify-center">Sonarr</p>
@@ -186,7 +453,7 @@
                     </div>
                 </a>
 
-                <a id="lidarr"
+                <a id="lidarr" href="{{ url_for('lidarr')}}"
                     class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     href="192.168.1.144:9443">
                     <p class="flex justify-center">Lidarr</p>
@@ -200,7 +467,7 @@
                     </div>
                 </a>
 
-                <a id="metube"
+                <a id="metube" href="{{ url_for('metube')}}"
                     class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     href="192.168.1.144:9443">
                     <p class="flex justify-center">Metube</p>
@@ -214,7 +481,7 @@
                     </div>
                 </a>
 
-                <a id="prowlarr"
+                <a id="prowlarr" href="{{ url_for('prowlarr')}}"
                     class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                     href="192.168.1.144:9443">
                     <p class="flex justify-center">Prowlarr</p>

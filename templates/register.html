@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="/static/server-solid.ico">
     <title>Register</title>
 </head>
 
@@ -13,17 +15,22 @@
         * {
               background-color: #27272C;
             }
+        img {
+            height: 100vh;
+            width: 200vh;
+            padding: none;
+            margin: none;
+        }
+
+        #only {
+            margin-bottom: 100px;
+        }
     </style>
-    <h1>Register Page</h1>
-
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
-        {{ form.submit }}
-    </form>
-
-    <a href="{{ url_for('login') }}">Already have an account? Log In</a>
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    
+    <img src="/static/registration.png">
+    <button id="only" type="button" onclick="location.href='{{ url_for('login') }}'" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Back To Login</button>
+</div>
 </body>
 
 </html>

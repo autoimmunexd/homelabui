@@ -110,7 +110,7 @@ def server():
 @app.route('/utilization')
 def utilization():
     cpu = f"CPU utilization: {psutil.cpu_percent()}%"
-    mem = f"Memory utilization: {psutil.virtual_memory().percent}%"
+    mem = f" \n Memory utilization: {psutil.virtual_memory().percent}%"
     #TO DO LIST :
     #add .ico
     #temp
@@ -120,6 +120,38 @@ def utilization():
     #weather
     #location, time, Day/date
     return str(cpu + mem)
+
+@app.route('/plex')
+def plex():
+    return redirect("https://app.plex.tv/desktop/?_gl=1*1n8rd66*_ga*NTQwNTQwMTkzLjE3MDIwNjU1NTY.*_ga_G6FQWNSENB*MTcwMzA3NjA0Ny4zLjEuMTcwMzA3NjEyMi42MC4wLjA.#!/media/b58766b8d9e142033a9dea6f927eca5df97dead7/com.plexapp.plugins.library?source=2")
+
+@app.route('/portainer')
+def portainer():
+    return redirect("https://192.168.1.144:9443/#!/auth")
+
+@app.route('/overseerr')
+def overseerr():
+    return redirect("https://192.168.1.144:5055")
+
+@app.route('/radarr')
+def radarr():
+    return redirect("http://192.168.1.144:7878/")
+
+@app.route('/sonarr')
+def sonarr():
+    return redirect("http://192.168.1.144:8989/")
+
+@app.route('/lidarr')
+def lidarr():
+    return redirect("http://192.168.1.144:8686/")
+
+@app.route('/metube')
+def metube():
+    return redirect("http://192.168.1.144:8081/")
+
+@app.route('/prowlarr')
+def prowlarr():
+    return redirect("http://192.168.1.144:9696")
 
 if __name__ == "__main__":
     app.run(debug=True)
