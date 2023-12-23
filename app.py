@@ -5,6 +5,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
+from uptime import uptime
+import psutil
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -22,6 +24,7 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 
 class User(db.Model, UserMixin):
@@ -61,7 +64,6 @@ class LoginForm(FlaskForm):
 def home():
     return render_template('home.html')
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -100,6 +102,24 @@ def register():
 
     return render_template('register.html', form=form)
 
+@app.route('/uptime')
+def server():
+    server_up = uptime()
+    return str(server_up)
+
+@app.route('/utilization')
+def utilization():
+    cpu = f"CPU utilization: {psutil.cpu_percent()}%"
+    mem = f"Memory utilization: {psutil.virtual_memory().percent}%"
+    #TO DO LIST :
+    #add .ico
+    #temp
+    #download upload in mb with icons
+    #disk utliization
+    #disk free space used space
+    #weather
+    #location, time, Day/date
+    return str(cpu + mem)
 
 if __name__ == "__main__":
     app.run(debug=True)
