@@ -1,33 +1,22 @@
-<<<<<<< HEAD
-# homelabui
-A personal project for learning and showcasing web technologies, sql, and python.
-=======
-## Python Flask Authentication
+This project serves as a showcase of techniques and technologies within my skillset utilizing Html, Css, Sql, Python, and Flask.  It serves as a dashboard for my homelab server.  I will update this at a later time.
 
-This repository contains the code used in the Python Flask Authentication [video](https://www.youtube.com/watch?v=71EU8gnZqZQ) uploaded on [my YouTube channel](https://www.youtube.com/watch?v=71EU8gnZqZQ).
-
-## Installation
-
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the required dependencies
-
-##### Windows:
-```zsh
-pip install -r requirements.txt 
+Notes to myself -
 ```
+#EXAMPLE OF WRONG WAY TO PASS DATA WITH THESE TWO ROUTES
+# @app.route('/wiki')
+# def wiki():
+#     wiki = scrape_wikipedia_main_page()
+#     return wiki
 
-##### macOS/Linux:
-```zsh
-pip3 install -r requirements.txt
-```
+# @app.route('/weather')
+# def weather():
+#     weather = get_weather_data()
+#     return weather
 
-## Usage
-
-##### Windows:
-```zsh
-python app.py
+#TO DO LIST :
+    #download upload in mb
+    #disk free space used space
+    #time day date
+    #start, stop, restart and status of docker container with buttons
+    #convert uptime and utilization to passthrough dashboard
 ```
-##### macOS/Linux:
-```zsh
-python3 app.py
-```
->>>>>>> a351652 (User Auth is working)

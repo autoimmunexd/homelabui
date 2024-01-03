@@ -6,7 +6,12 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 from uptime import uptime
+from software_list import apps
 import psutil
+import schedule
+import time
+from scrape import scrape_wikipedia_main_page
+from weather import get_weather_data
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -14,24 +19,18 @@ app.config['SECRET_KEY'] = 'thisisasecretkey'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
-
 
 class RegisterForm(FlaskForm):
     username = StringField(validators=[
@@ -64,6 +63,24 @@ class LoginForm(FlaskForm):
 def home():
     return render_template('home.html')
 
+#EXAMPLE OF WRONG WAY TO PASS DATA WITH THESE TWO ROUTES
+# @app.route('/wiki')
+# def wiki():
+#     wiki = scrape_wikipedia_main_page()
+#     return wiki
+
+# @app.route('/weather')
+# def weather():
+#     weather = get_weather_data()
+#     return weather
+
+#TO DO LIST :
+    #download upload in mb
+    #disk free space used space
+    #time day date
+    #start, stop, restart and status of docker container
+    #convert uptime and utilization to passthrough dashboard
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -79,7 +96,9 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    ui_data = get_weather_data()
+    wiki = scrape_wikipedia_main_page()
+    return render_template('dashboard.html', apps=apps, ui_data=ui_data, wiki=wiki)
 
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -111,14 +130,6 @@ def server():
 def utilization():
     cpu = f"CPU utilization: {psutil.cpu_percent()}%"
     mem = f" \n Memory utilization: {psutil.virtual_memory().percent}%"
-    #TO DO LIST :
-    #add .ico
-    #temp
-    #download upload in mb with icons
-    #disk utliization
-    #disk free space used space
-    #weather
-    #location, time, Day/date
     return str(cpu + mem)
 
 @app.route('/plex')
@@ -152,6 +163,22 @@ def metube():
 @app.route('/prowlarr')
 def prowlarr():
     return redirect("http://192.168.1.144:9696")
+
+@app.route('/qbittorrent')
+def qbittorrent():
+    return redirect("http://192.168.1.144:8085")
+
+@app.route('/proxmox')
+def proxmox():
+    return redirect("http://192.168.1.199:8006")
+
+@app.route('/opnsense')
+def opnsense():
+    return redirect("http://192.168.1.1")
+
+@app.route('/syncthing')
+def syncthing():
+    return redirect("http://192.168.1.144:8384")
 
 if __name__ == "__main__":
     app.run(debug=True)

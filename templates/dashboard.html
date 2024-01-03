@@ -2,509 +2,77 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/x-icon" href="/static/server-solid.ico">
-    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-    
-    <title>Dashboard</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" type="image/x-icon" href="/static/server-solid.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+  <title>Dashboard</title>
 </head>
 
 <body class="bg-white dark:bg-gray-900">
-    <style>
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
 
-        /* body and .text are NOT required for the blinking cursor. */
-        body {
-            background: black
-        }
-
-        .text {
-            position: relative;
-            display: inline-block;
-            font-family: Monaco, Arial, Helvetica, sans-serif;
-            line-height: 24px;
-            font-size: 24px;
-            color: #62529c;
-            min-width: 280px;
-        }
-
-        .text::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: -15px;
-            /* Remove display: inline-block if not required to be on the same line as text etc */
-            display: inline-block;
-            background-color: #606060;
-            vertical-align: top;
-            width: 10px;
-            /* Set height to the line height of .text */
-            height: 24px;
-            /* 
-  Animation paramaters:
-  blink = animation-name, 
-  1s = animation-duration, 
-  step-end = animation-timing-function,
-  infinite = animation-iteration-count
-  */
-            -webkit-animation: blink 1s step-end infinite;
-            animation: blink 1s step-end infinite;
-        }
-
-        @-webkit-keyframes blink {
-            0% {
-                opacity: 1.0;
-            }
-
-            50% {
-                opacity: 0.0;
-            }
-
-            100% {
-                opacity: 1.0;
-            }
-        }
-
-        @keyframes blink {
-            0% {
-                opacity: 1.0;
-            }
-
-            50% {
-                opacity: 0.0;
-            }
-
-            100% {
-                opacity: 1.0;
-            }
-        }
-
-        #plex,
-        #portainer,
-        #overseerr,
-        #sonarr,
-        #radarr,
-        #lidarr,
-        #metube,
-        #prowlarr {
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        #plex {
-            background-image: url('/static/plex.png');
-        }
-
-        #portainer {
-            background-image: url('/static/portainer.png');
-        }
-
-        #overseerr {
-            background-image: url('/static/overseerr.png');
-        }
-        
-        #sonarr {
-            background-image: url('/static/sonarr.png');
-        }
-
-        #radarr {
-            background-image: url('/static/radarr.png');
-        }
-
-        #lidarr {
-            background-image: url('/static/lidarr.png');
-        }
-
-        #metube {
-            background-image: url('/static/metube.png');
-        }
-
-        #prowlarr {
-            background-image: url('/static/prowlarr.png');
-        }
-
-        p {
-            color: #62529c;
-            margin-top: 50px;
-            font-size: 50px
-        }
-
-        .block {
-            filter: saturate(60%);
-        }
-        .fakeButtons {
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  border: 1px solid #000;
-  position: relative;
-  top: 6px;
-  left: 6px;
-  background-color: #ff3b47;
-  border-color: #9d252b;
-  display: inline-block;
-}
-
-.fakeMinimize {
-  left: 11px;
-  background-color: #ffc100;
-  border-color: #9d802c;
-}
-
-.fakeZoom {
-  left: 16px;
-  background-color: #00d742;
-  border-color: #049931;
-}
-
-.fakeMenu {
-  width: 550px;
-  box-sizing: border-box;
-  height: 25px;
-  background-color: #bbb;
-  margin: 0 auto;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  padding-bottom: 30px;
-}
-
-.fakeScreen {
-  background-color: #151515;
-  box-sizing: border-box;
-  width: 550px;
-  margin: 0 auto;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
-
-
-span {
-  color: #fff;
-  font-weight: bold;
-}
-
-.line1 {
-  color: #9CD9F0;
-  -webkit-animation: type .5s 1s steps(20, end) forwards;
-  -moz-animation: type .5s 1s steps(20, end) forwards;
-  -o-animation: type .5s 1s steps(20, end) forwards;
-  animation: type .5s 1s steps(20, end) forwards;
-}
-
-.cursor1 {
-  -webkit-animation: blink 1s 2s 2 forwards;
-  -moz-animation: blink 1s 2s 2 forwards;
-  -o-animation: blink 1s 2s 2 forwards;
-  animation: blink 1s 2s 2 forwards;
-}
-
-.line2 {
-  color: #CDEE69;
-  -webkit-animation: type .5s 4.25s steps(20, end) forwards;
-  -moz-animation: type .5s 4.25s steps(20, end) forwards;
-  -o-animation: type .5s 4.25s steps(20, end) forwards;
-  animation: type .5s 4.25s steps(20, end) forwards;
-}
-
-.cursor2 {
-  -webkit-animation: blink 1s 5.25s 2 forwards;
-  -moz-animation: blink 1s 5.25s 2 forwards;
-  -o-animation: blink 1s 5.25s 2 forwards;
-  animation: blink 1s 5.25s 2 forwards;
-}
-
-.line3 {
-  color: #E09690;
-  -webkit-animation: type .5s 7.5s steps(20, end) forwards;
-  -moz-animation: type .5s 7.5s steps(20, end) forwards;
-  -o-animation: type .5s 7.5s steps(20, end) forwards;
-  animation: type .5s 7.5s steps(20, end) forwards;
-}
-
-.cursor3 {
-  -webkit-animation: blink 1s 8.5s 2 forwards;
-  -moz-animation: blink 1s 8.5s 2 forwards;
-  -o-animation: blink 1s 8.5s 2 forwards;
-  animation: blink 1s 8.5s 2 forwards;
-}
-
-.line4 {
-  color: #fff;
-  -webkit-animation: type .5s 10.75s steps(20, end) forwards;
-  -moz-animation: type .5s 10.75s steps(20, end) forwards;
-  -o-animation: type .5s 10.75s steps(20, end) forwards;
-  animation: type .5s 10.75s steps(20, end) forwards;
-}
-
-.cursor4 {
-  -webkit-animation: blink 1s 11.5s infinite;
-  -moz-animation: blink 1s 8.5s infinite;
-  -o-animation: blink 1s 8.5s infinite;
-  animation: blink 1s 8.5s infinite;
-}
-
-@-webkit-keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@-moz-keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@-o-keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@-webkit-keyframes type {
-  to {
-    width: 17em;
-  }
-}
-
-@-moz-keyframes type {
-  to {
-    width: 17em;
-  }
-}
-
-@-o-keyframes type {
-  to {
-    width: 17em;
-  }
-}
-
-@keyframes type {
-  to {
-    width: 17em;
-  }
-}
-
-#terminal_content {
-    margin: none;
-    padding: none;
-}
-
-.live_data {
-    color: white;
-}
-    </style>
-
-
-<div class=fakeMenu>
-    <div class="fakeButtons fakeClose"></div>
-    <div class="fakeButtons fakeMinimize"></div>
-    <div class="fakeButtons fakeZoom"></div>
-  </div>
   <div class="fakeScreen">
+    <div class="fakeMenu">
+      <div class="fakeButtons fakeClose"></div>
+      <div class="fakeButtons fakeMinimize"></div>
+      <div class="fakeButtons fakeZoom"></div>
+    </div>
     <div id="terminal_content" class="py-8 px-4 mx-auto max-w-screen-xl sm:py-6 lg:px-6">
-        <div class="terminal">
+      <div class="terminal">
         <div class="text">noplacelike@127.0.0.1:~$</div>
         <div class="live_data">
-       <div hx-get="/uptime" hx-trigger="every 1s"></div>
-       <div hx-get="/utilization" hx-trigger="every 1s"></div>
+          <p class="text-xl font-semibold mb-4">Currently : {{ui_data[0]['Temperature']}}°F</p>
+        <p class="text-xl font-semibold mb-4">{{ui_data[0]['Name']}}</p>
+        <p class="text-sm">
+              {{ui_data[0]['Detailed Forecast']}}
+        </p>
+        <br>
+        <p class="text-xl font-semibold mb-4">{{ui_data[1]['Name']}}</p>
+        <p class="text-sm">
+         {{ui_data[1]['Temperature']}} {{ui_data[1]['Detailed Forecast']}}
+     </p>
+     <br>
+     <br>
+          <div hx-get="/uptime" hx-trigger="every 30s"></div>
+          <div hx-get="/utilization" hx-trigger="every 30s"></div>
+        </div>
+      </div>
     </div>
-    </div>
-</div>
   </div>
 
+  <style>
+    {% for app in apps %}
+    {% set link_value = app.get("link") %}
+    #{{ app['name']|lower }} {
+      background-image: url({{ link_value }});
+    }
+    {% endfor %}
+  </style>
 
+  <section class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
+    {% for app in apps %}
+    <a href="{{ url_for(app['name']|lower) }}">
+      <div
+        class="appcard bg-gray-800 text-purple-300 m-2 p-8 rounded-xl transition-transform transform-gpu hover:scale-105"
+        id="{{ app['name']|lower }}">
+        <p class="flex justify-center text-2xl">{{ app['name']}}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </section>
 
-
-  
-    
-    <section>
-        
-        <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-5 lg:px-6">
-            <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 auto-rows-fr md:gap-12 md:space-y-0 ">
-                
-                <a id="plex" href="{{ url_for('plex')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <p class="flex justify-center">Plex</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-            
-                <a id="portainer" href="{{ url_for('portainer')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="192.168.1.144:9443">
-                    <p class="flex justify-center">Portainer</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                <a id="overseerr" href="{{ url_for('overseerr')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="192.168.1.144:9443">
-                    <p class="flex justify-center">Overseerr</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                <a id="radarr" href="{{ url_for('radarr')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="192.168.1.144:9443">
-                    <p class="flex justify-center">Radarr</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                <a id="sonarr" href="{{ url_for('sonarr')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="192.168.1.144:9443">
-                    <p class="flex justify-center">Sonarr</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                <a id="lidarr" href="{{ url_for('lidarr')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="192.168.1.144:9443">
-                    <p class="flex justify-center">Lidarr</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                <a id="metube" href="{{ url_for('metube')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="192.168.1.144:9443">
-                    <p class="flex justify-center">Metube</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                <a id="prowlarr" href="{{ url_for('prowlarr')}}"
-                    class="block p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-                    href="192.168.1.144:9443">
-                    <p class="flex justify-center">Prowlarr</p>
-                    <div class="relative mb-10 w-6 h-12">
-                        <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-            </div>
-            <a class="flex justify-center" href="{{url_for('logout')}}">
-                L O G O U T
-            </a>
-        </div>
-
-    </section>
-
+  <div class="bg-white dark:bg-gray-900 p-8 rounded-md w-full">
+    <div class="news-container">
+      <h2 class="text-2xl font-bold mb-4">In The News :</h2>
+      {{ wiki | safe }}
     </div>
-    </div>
+  </div>
+
+  <div class="flex justify-center">
+    <a href="{{url_for('logout')}}" class="text-purple-300">L O G O U T</a>
+  </div>
 </body>
-
 </html>

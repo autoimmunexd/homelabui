@@ -1,0 +1,134 @@
+body {
+  background: #f7f7f7;
+  color: #805ad5;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.text {
+  position: relative;
+  display: inline-block;
+  font-size: 18px;
+  color: #333;
+}
+
+.text::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: -11px;
+  display: inline-block;
+  background-color: #555;
+  width: 8px;
+  height: 20px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.appcard {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  margin: 10px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease-in-out;
+  height: 200px;
+  width: 300px; /* Set a fixed width for all app cards */
+}
+
+.appcard:hover {
+  transform: scale(1.05);
+}
+
+.fakeButtons,
+.fakeMinimize,
+.fakeZoom {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  border: 1px solid #2d2d2d;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-block;
+}
+
+.fakeMinimize {
+  left: 45px;
+  background-color: #ffc100;
+  border-color: #ffc100;
+}
+
+.fakeClose {
+  background-color: red;
+  border-color: red;
+}
+
+.fakeZoom {
+  left: 70px;
+  background-color: #00d742;
+  border-color: #00d742;
+}
+
+.fakeScreen {
+  background-color: #000;
+  box-sizing: border-box;
+  width: 550px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.live_data {
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#weather {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%; 
+  z-index: 999;
+  border-color: transparent;
+}
+
+#weather .bg-white {
+  background-color: transparent;
+}
+
+/* Additional style for mobile responsiveness */
+@media (max-width: 640px) {
+  .fakeScreen {
+    display: none; /* Hide fakeScreen on small screens */
+  }
+}
+
+  @media (max-width: 940px) {
+    #weather {
+      display: none; /* Hide fakeScreen on small screens */
+    }
+
+  #weather {
+    flex-direction: column; /* Stack weather content vertically on small screens */
+  }
+
+  #weather .bg-white {
+    width: 100%; /* Full width on small screens */
+    margin-bottom: 20px; /* Add margin for better spacing */
+  }
+}
