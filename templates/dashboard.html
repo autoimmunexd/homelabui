@@ -23,22 +23,26 @@
     <div id="terminal_content" class="py-8 px-4 mx-auto max-w-screen-xl sm:py-6 lg:px-6">
       <div class="terminal">
         <div class="text">noplacelike@127.0.0.1:~$</div>
-        <div class="live_data">
-          <p class="text-xl font-semibold mb-4">Currently : {{ui_data[0]['Temperature']}}°F</p>
-        <p class="text-xl font-semibold mb-4">{{ui_data[0]['Name']}}</p>
+<div class="live_data">
+    {% if ui_data %}
+        <p class="text-xl font-semibold mb-4">Currently : {{ ui_data[0]['Temperature'] | default('placeholder') }}°F</p>
+        <p class="text-xl font-semibold mb-4">{{ ui_data[0]['Name'] | default('placeholder') }}</p>
         <p class="text-sm">
-              {{ui_data[0]['Detailed Forecast']}}
+            {{ ui_data[0]['Detailed Forecast'] | default('placeholder') }}
         </p>
         <br>
-        <p class="text-xl font-semibold mb-4">{{ui_data[1]['Name']}}</p>
+        <p class="text-xl font-semibold mb-4">{{ ui_data[1]['Name'] | default('placeholder') }}</p>
         <p class="text-sm">
-         {{ui_data[1]['Temperature']}} {{ui_data[1]['Detailed Forecast']}}
-     </p>
-     <br>
-     <br>
-          <div hx-get="/uptime" hx-trigger="every 30s"></div>
-          <div hx-get="/utilization" hx-trigger="every 30s"></div>
-        </div>
+            {{ ui_data[1]['Temperature'] | default('placeholder') }} {{ ui_data[1]['Detailed Forecast'] | default('placeholder') }}
+        </p>
+        <br>
+    {% else %}
+        <p class="text-xl font-semibold mb-4">No data available</p>
+    {% endif %}
+    <div hx-get="/uptime" hx-trigger="every 30s"></div>
+    <div hx-get="/utilization" hx-trigger="every 30s"></div>
+</div>
+
       </div>
     </div>
   </div>
@@ -54,11 +58,13 @@
 
   <section class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
     {% for app in apps %}
+    
     <a href="{{ url_for(app['name']|lower) }}">
+      <p class="flex justify-center text-2xl">{{ app['name']}}</p>
       <div
         class="appcard bg-gray-800 text-purple-300 m-2 p-8 rounded-xl transition-transform transform-gpu hover:scale-105"
         id="{{ app['name']|lower }}">
-        <p class="flex justify-center text-2xl">{{ app['name']}}</p>
+        
       </div>
     </a>
     {% endfor %}

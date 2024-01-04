@@ -71,8 +71,8 @@ def home():
 
 # @app.route('/weather')
 # def weather():
-#     weather = get_weather_data()
-#     return weather
+#     ui_data = get_weather_data()
+#     return ui_data
 
 #TO DO LIST :
     #download upload in mb
@@ -100,13 +100,11 @@ def dashboard():
     wiki = scrape_wikipedia_main_page()
     return render_template('dashboard.html', apps=apps, ui_data=ui_data, wiki=wiki)
 
-
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
 
 @ app.route('/register', methods=['GET', 'POST'])
 def register():

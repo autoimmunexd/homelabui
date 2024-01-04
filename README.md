@@ -16,7 +16,7 @@ Notes to myself -
 #TO DO LIST :
     #download upload in mb
     #disk free space used space
-    #time day date
     #start, stop, restart and status of docker container with buttons
     #convert uptime and utilization to passthrough dashboard
+    #add last updated for weather and wikipedia data and have server only execute the get weather and wiki functions if the last update time was more than 10 hours ago
 ```

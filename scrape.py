@@ -7,10 +7,8 @@ def scrape_wikipedia_main_page():
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-
         # Find the target div
         target_div = soup.find('div', {'id': 'mp-itn', 'class': 'mp-contains-float'})
-
         # Check if the target div is found
         if target_div:
             # Convert the target div to a string
