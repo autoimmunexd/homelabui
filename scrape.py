@@ -14,8 +14,9 @@ def scrape_wikipedia_main_page():
             # Convert the target div to a string
             div_string = target_div
             print(type(div_string))
-            return div_string
+            return str(div_string)
         else:
             print("Div not found on the page.")
     else:
         print("Failed to retrieve the webpage. Status code:", response.status_code)
+    

@@ -1,0 +1,27 @@
+{% macro data(server_up) %}
+    
+        <div class="row">
+            <table id="data" class="table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Server Uptime</th>
+                        <th scope="col">CPU Utilization</th>
+                        <th scope="col">Memory Utilization</th>
+                        <th scope="col">Storage Utilization</th>
+                        <th scope="col">Bandwidth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th id="uptime" scope="row"></th>
+                        <td id="cpu"></td>
+                        <td id="memory"></td>
+                        <td id="storage"></td>
+                        <td id="bandwidth">band</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endmacro %}

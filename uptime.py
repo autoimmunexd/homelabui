@@ -30,4 +30,4 @@ def uptime():
          string += str(minutes) + " " + (minutes == 1 and "minute" or "minutes" ) + ", "
      string += str(seconds) + " " + (seconds == 1 and "second" or "seconds" )
  
-     return "Server Uptime : " + string
+     return string

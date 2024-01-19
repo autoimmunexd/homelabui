@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -8,14 +8,18 @@ from flask_bcrypt import Bcrypt
 from uptime import uptime
 from software_list import apps
 import psutil
-import schedule
-import time
+import logging
 from scrape import scrape_wikipedia_main_page
 from weather import get_weather_data
+from storage import storage
+from bandwidth import get_bandwidth
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'thisisasecretkey'
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -64,22 +68,33 @@ def home():
     return render_template('home.html')
 
 #EXAMPLE OF WRONG WAY TO PASS DATA WITH THESE TWO ROUTES
-# @app.route('/wiki')
-# def wiki():
-#     wiki = scrape_wikipedia_main_page()
-#     return wiki
+@app.route('/wiki')
+def wiki():
+     wiki = scrape_wikipedia_main_page()
+     return render_template('dashboard.html', wiki=wiki)
 
-# @app.route('/weather')
-# def weather():
-#     ui_data = get_weather_data()
-#     return ui_data
+@app.route('/weather')
+def weather():
+    ui_data = get_weather_data()
+    return ui_data
+
+@app.route('/storage')
+def storageroute():
+    storage_data = storage()
+    return storage_data
+
+@app.route('/bandwidth')
+def bandwidthroute():
+    bandwidth_usage = get_bandwidth()
+    print(bandwidth_usage)
+    return bandwidth_usage
 
 #TO DO LIST :
     #download upload in mb
     #disk free space used space
     #time day date
     #start, stop, restart and status of docker container
-    #convert uptime and utilization to passthrough dashboard
+    #pass data from docker to applicationlist
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -96,9 +111,7 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    ui_data = get_weather_data()
-    wiki = scrape_wikipedia_main_page()
-    return render_template('dashboard.html', apps=apps, ui_data=ui_data, wiki=wiki)
+    return render_template('dashboard.html', apps=apps)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -109,26 +122,24 @@ def logout():
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
         new_user = User(username=form.username.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
-
     return render_template('register.html', form=form)
 
 @app.route('/uptime')
-def server():
+def server_up():
     server_up = uptime()
-    return str(server_up)
+    return server_up
 
 @app.route('/utilization')
 def utilization():
     cpu = f"CPU utilization: {psutil.cpu_percent()}%"
     mem = f" \n Memory utilization: {psutil.virtual_memory().percent}%"
-    return str(cpu + mem)
+    return jsonify({'cpu': cpu, 'mem': mem})
 
 @app.route('/plex')
 def plex():
@@ -179,4 +190,4 @@ def syncthing():
     return redirect("http://192.168.1.144:8384")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

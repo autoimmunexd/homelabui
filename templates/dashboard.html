@@ -1,84 +1,65 @@
+{% from "data.jinja" import data %}
+{% from "weather.jinja" import weather %}
+{% from "card.jinja" import card %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="icon" type="image/x-icon" href="/static/server-solid.ico">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-  <title>Dashboard</title>
-</head>
-
-<body class="bg-white dark:bg-gray-900">
-
-  <div class="fakeScreen">
-    <div class="fakeMenu">
-      <div class="fakeButtons fakeClose"></div>
-      <div class="fakeButtons fakeMinimize"></div>
-      <div class="fakeButtons fakeZoom"></div>
-    </div>
-    <div id="terminal_content" class="py-8 px-4 mx-auto max-w-screen-xl sm:py-6 lg:px-6">
-      <div class="terminal">
-        <div class="text">noplacelike@127.0.0.1:~$</div>
-<div class="live_data">
-    {% if ui_data %}
-        <p class="text-xl font-semibold mb-4">Currently : {{ ui_data[0]['Temperature'] | default('placeholder') }}°F</p>
-        <p class="text-xl font-semibold mb-4">{{ ui_data[0]['Name'] | default('placeholder') }}</p>
-        <p class="text-sm">
-            {{ ui_data[0]['Detailed Forecast'] | default('placeholder') }}
-        </p>
-        <br>
-        <p class="text-xl font-semibold mb-4">{{ ui_data[1]['Name'] | default('placeholder') }}</p>
-        <p class="text-sm">
-            {{ ui_data[1]['Temperature'] | default('placeholder') }} {{ ui_data[1]['Detailed Forecast'] | default('placeholder') }}
-        </p>
-        <br>
-    {% else %}
-        <p class="text-xl font-semibold mb-4">No data available</p>
-    {% endif %}
-    <div hx-get="/uptime" hx-trigger="every 30s"></div>
-    <div hx-get="/utilization" hx-trigger="every 30s"></div>
-</div>
-
-      </div>
-    </div>
-  </div>
-
+  <title>Homelab 4.0</title>
   <style>
-    {% for app in apps %}
-    {% set link_value = app.get("link") %}
-    #{{ app['name']|lower }} {
-      background-image: url({{ link_value }});
-    }
-    {% endfor %}
+    /* Your style content as before */
   </style>
+</head>
+<body cz-shortcut-listen="true">
+  <button id="bandwidthbtn">get band</button>
+  <div class="container-fluid">
 
-  <section class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
-    {% for app in apps %}
-    
-    <a href="{{ url_for(app['name']|lower) }}">
-      <p class="flex justify-center text-2xl">{{ app['name']}}</p>
-      <div
-        class="appcard bg-gray-800 text-purple-300 m-2 p-8 rounded-xl transition-transform transform-gpu hover:scale-105"
-        id="{{ app['name']|lower }}">
-        
+    <div class="row">
+      <table id="data" class="table table-striped text-center">
+        {{ data() }}
+      </table>
+    </div>
+
+    <div class="row">
+      <!-- Weather Column -->
+      <div id="weatherColumn" class="col-md-2">
+        <div class="bg p-3">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                {{ weather() }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </a>
-    {% endfor %}
-  </section>
 
-  <div class="bg-white dark:bg-gray-900 p-8 rounded-md w-full">
-    <div class="news-container">
-      <h2 class="text-2xl font-bold mb-4">In The News :</h2>
-      {{ wiki | safe }}
+      <!-- Applications Column -->
+      <div id="applicationsColumn" class="col-md-10">
+        <div class="bg p-3">
+          <div class="row justify-content-center">
+            {% for app in apps %}
+              {{ card(app) }}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="flex justify-center">
-    <a href="{{url_for('logout')}}" class="text-purple-300">L O G O U T</a>
+    <a href="{{url_for('logout')}}">L O G O U T</a>
   </div>
+  <script src="/static/index.js"></script>
 </body>
+
 </html>
