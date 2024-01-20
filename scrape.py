@@ -13,7 +13,8 @@ def scrape_wikipedia_main_page():
         if target_div:
             # Convert the target div to a string
             pretty = str(target_div)
-            with open("wiki_news.html", "w") as file:
+            file_name = 'static/data/wiki_news.html'
+            with open(file_name, "w") as file:
                 file.write(pretty)
                 print('WIKI HTML SAVED!')
         else:

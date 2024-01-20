@@ -3,6 +3,8 @@ import logging
 from datetime import datetime, timedelta
 import os
 from pathlib import Path
+import time
+import threading
 
 # Third-Party Library Imports
 from flask import Flask, jsonify, redirect, render_template, url_for
@@ -21,7 +23,6 @@ from bandwidth import get_bandwidth
 from scrape import scrape_wikipedia_main_page
 from storage import storage
 from weather import get_weather_data
-
 # TO DO LIST :
 #   - time day date
 #   - pass data from docker to application list
@@ -82,37 +83,33 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
-def file_is_old(file_path, hours_threshold=2):
-    file_path = Path(file_path)
-    return file_path.exists() and (datetime.now() - datetime.fromtimestamp(file_path.stat().st_mtime) > timedelta(hours=hours_threshold))
+# def file_is_old(file_path, hours_threshold=2):
+#     file_path = Path(file_path)
+#     return file_path.exists() and (datetime.now() - datetime.fromtimestamp(file_path.stat().st_mtime) > timedelta(hours=hours_threshold))
 
-@app.route('/wiki')
-def wiki_route():
-    # File path
-    file_path = 'static/data/wiki_news.html'
-    # Check if the file exists and is older than 2 hours
-    if file_is_old(file_path):
-        # Run the method if the conditions are met
-        scrape_wikipedia_main_page()
-        return "Scraping Wikipedia Main Page..."
-    else:
-        return "File was modified within the last 2 hours."
+# file_path = "ui_data.json"
+
+#         if file_is_old(file_path):
+#             ui_data = get_weather_data()
+
+#             with open(file_path, 'w') as file:
+#                 file.write(str(ui_data))
+#         else:
+#             print("Data isn't old.")
+
+# @app.route('/wiki')
+# def wiki_route():
+#     # File path
+#     file_path = 'static/data/wiki_news.html'
+#     # Check if the file exists and is older than 2 hours
+#     if file_is_old(file_path):
+#         # Run the method if the conditions are met
+#         scrape_wikipedia_main_page()
+#         return "Scraping Wikipedia Main Page..."
+#     else:
+#         return "File was modified within the last 2 hours."
 
 
-@app.route('/weather')
-def weather():
-    file_path = "ui_data.json"
-    # Check if the file is older than 2 hours
-    if file_is_old(file_path):
-        # If older than 2 hours, update ui_data
-        ui_data = get_weather_data()
-        # Save the new ui_data to the file
-        with open(file_path, 'w') as file:
-            file.write(str(ui_data))
-        return ui_data
-    else:
-        # Print a message if data isn't old
-        print("Data isn't old.")
 
 @app.route('/storage')
 def storageroute():
@@ -164,7 +161,7 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    apps = get_apps()
+    #apps = get_apps()
     return render_template('dashboard.html', apps=apps)
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -232,6 +229,43 @@ def syncthing():
 def metube():
     return redirect("http://192.168.1.144:8081/")
 
+# Set the base directory for the 'static' folder
+base_dir = os.path.dirname(__file__)
+
+# Define paths relative to /static/data without double slashes
+wiki_news_path = os.path.normpath(os.path.join(base_dir, 'static', 'data', 'wiki_news.html'))
+ui_data_path = os.path.normpath(os.path.join(base_dir, 'static', 'data', 'ui_data.json'))
+update_interval = 14400  # 4 hours in seconds
+
+def check_and_update_files():
+    while True:
+        if file_is_old(wiki_news_path):
+            scrape_wikipedia_main_page()  # Run the scrape function when wiki_news.html is older than 4 hours
+
+        if file_is_old(ui_data_path):
+            ui_data = get_weather_data()
+
+            with open(ui_data_path, 'w') as file:
+                file.write(str(ui_data))
+            print("UI data updated.")
+
+        time.sleep(update_interval)
+
+def file_is_old(file_path):
+    # Implement the logic to check if the file is older than 4 hours
+    current_time = time.time()
+    file_modified_time = os.path.getmtime(file_path)
+    return (current_time - file_modified_time) > update_interval
+
 if __name__ == "__main__":
-    app.run(host='192.168.1.144', port=9000)
-    #d
+    if os.name == 'posix':
+        app.run(host='192.168.1.144', port=9000)
+    else:
+        app.run()
+        print('local development')
+    # Start a thread for the periodic file checks and updates
+    update_thread = threading.Thread(target=check_and_update_files)
+    update_thread.start()
+    # Keep the main thread running
+    while True:
+        time.sleep(1)
