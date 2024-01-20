@@ -29,7 +29,7 @@ from weather import get_weather_data
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////database.db'
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 
 log = logging.getLogger('werkzeug')
@@ -230,4 +230,4 @@ def syncthing():
     return redirect("http://192.168.1.144:8384")
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(host='192.168.1.144', port=9000)
