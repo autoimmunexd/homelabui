@@ -161,7 +161,7 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    #apps = get_apps()
+    apps = get_apps()
     return render_template('dashboard.html', apps=apps)
 
 @app.route('/logout', methods=['GET', 'POST'])

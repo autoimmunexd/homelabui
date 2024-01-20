@@ -12,13 +12,15 @@ def get_apps():
 
     # Loop through each running container
     for container in running_containers:
-        # Get the name and the ports of the container
+        # Get the name, status, and the ports of the container
         name = container.name
+        status = container.status
         ports = container.ports
 
         # Initialize a dictionary for the current container
         container_dict = {
             "name": name,
+            "status": status,
             "link": f"/static/{name.lower()}.png",  # Assuming PNG file format
             "port": None  # Placeholder for port, to be updated below
         }

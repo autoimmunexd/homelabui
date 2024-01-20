@@ -6,7 +6,7 @@ $(document).ready(() => {
             type: 'GET',
             success: (data) => {
                 // Update DOM element with converted data
-                $('#bandwidth').text(JSON.stringify(data.eth0));
+                $('#band').text(JSON.stringify(data.eth0));
             },
             error: (error) => {
                 console.error('Error:', error);
@@ -68,7 +68,6 @@ $(document).ready(() => {
     //on page load
     fetchData();
     updateWeatherData();
-
     //interval timers for live data
     setInterval(fetchBandwidth, 5000)
     // Fetch uptime every second
