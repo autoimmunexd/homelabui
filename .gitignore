@@ -76,3 +76,14 @@ venv/bin/python3
 venv/bin/activate.fish
 venv/bin/activate.csh
 venv/bin/activate
+venv/bin/activate
+venv/bin/activate
+venv/bin/activate.csh
+venv/bin/activate
+venv/bin/python3
+*.cfg
+venv/pyvenv.cfg
+venv/bin/python3
+venv/bin/activate.fish
+venv/bin/activate.csh
+venv/bin/activate

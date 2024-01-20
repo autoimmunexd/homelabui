@@ -29,7 +29,8 @@ from weather import get_weather_data
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////database.db'
+import os
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'database.db')
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 
 log = logging.getLogger('werkzeug')
@@ -37,6 +38,9 @@ log.setLevel(logging.ERROR)
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+# with app.app_context():
+#     db.create_all()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -51,7 +55,6 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
-
 
 class RegisterForm(FlaskForm):
     username = StringField(validators=[
@@ -231,3 +234,4 @@ def syncthing():
 
 if __name__ == "__main__":
     app.run(host='192.168.1.144', port=9000)
+    #d
