@@ -229,7 +229,7 @@ def syncthing():
     return redirect("http://192.168.1.144:8384")
 
 @app.route('/zealous_taussig')
-def syncthing():
+def metube():
     return redirect("http://192.168.1.144:8081/")
 
 if __name__ == "__main__":
