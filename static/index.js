@@ -57,6 +57,7 @@ $(document).ready(() => {
                 $('#name2').text(data[1]["Name"]);
                 $('#temperature2').text(data[1]["Temperature"]);
                 $('#forecast2').text(data[1]["Detailed Forecast"]);
+                $('#last-updated-weather').text(data[2]["Updated Last"])
             },
             error: (error) => {
                 console.error('Error:', error);
