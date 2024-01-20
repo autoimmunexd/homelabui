@@ -140,12 +140,21 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
+    try:
+        if form.validate_on_submit():
+            print("Form is valid")
+            user = User.query.filter_by(username=form.username.data).first()
+            print("User:", user)
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                print("Password is correct")
                 login_user(user)
                 return redirect(url_for('dashboard'))
+            else:
+                print("Password is incorrect")
+        else:
+            print("Form is not valid")
+    except Exception as e:
+        print("Error:", e)
     return render_template('login.html', form=form)
 
 
