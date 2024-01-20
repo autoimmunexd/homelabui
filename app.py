@@ -1,25 +1,40 @@
-from flask import Flask, render_template, url_for, redirect, jsonify
+# Standard Library Imports
+import logging
+from datetime import datetime, timedelta
+import os
+from pathlib import Path
+
+# Third-Party Library Imports
+from flask import Flask, jsonify, redirect, render_template, url_for
+from flask_bcrypt import Bcrypt
+from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import InputRequired, Length, ValidationError
-from flask_bcrypt import Bcrypt
-from uptime import uptime
-from software_list import apps
+from wtforms.validators import InputRequired, Length
 import psutil
-import logging
-from scrape import scrape_wikipedia_main_page
-from weather import get_weather_data
-from storage import storage
+from uptime import uptime
+
+# Local Imports
+from software_list import get_apps
 from bandwidth import get_bandwidth
+from scrape import scrape_wikipedia_main_page
+from storage import storage
+from weather import get_weather_data
+
+# TO DO LIST :
+#   - time day date
+#   - pass data from docker to application list
+#loop over app containers and create routes for url redirects
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'thisisasecretkey'
+
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -31,10 +46,12 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+
 
 class RegisterForm(FlaskForm):
     username = StringField(validators=[
@@ -62,21 +79,37 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+def file_is_old(file_path, hours_threshold=2):
+    file_path = Path(file_path)
+    return file_path.exists() and (datetime.now() - datetime.fromtimestamp(file_path.stat().st_mtime) > timedelta(hours=hours_threshold))
 
-@app.route('/')
-def home():
-    return render_template('home.html')
-
-#EXAMPLE OF WRONG WAY TO PASS DATA WITH THESE TWO ROUTES
 @app.route('/wiki')
-def wiki():
-     wiki = scrape_wikipedia_main_page()
-     return render_template('dashboard.html', wiki=wiki)
+def wiki_route():
+    # File path
+    file_path = 'static/data/wiki_news.html'
+    # Check if the file exists and is older than 2 hours
+    if file_is_old(file_path):
+        # Run the method if the conditions are met
+        scrape_wikipedia_main_page()
+        return "Scraping Wikipedia Main Page..."
+    else:
+        return "File was modified within the last 2 hours."
+
 
 @app.route('/weather')
 def weather():
-    ui_data = get_weather_data()
-    return ui_data
+    file_path = "ui_data.json"
+    # Check if the file is older than 2 hours
+    if file_is_old(file_path):
+        # If older than 2 hours, update ui_data
+        ui_data = get_weather_data()
+        # Save the new ui_data to the file
+        with open(file_path, 'w') as file:
+            file.write(str(ui_data))
+        return ui_data
+    else:
+        # Print a message if data isn't old
+        print("Data isn't old.")
 
 @app.route('/storage')
 def storageroute():
@@ -89,12 +122,20 @@ def bandwidthroute():
     print(bandwidth_usage)
     return bandwidth_usage
 
-#TO DO LIST :
-    #download upload in mb
-    #disk free space used space
-    #time day date
-    #start, stop, restart and status of docker container
-    #pass data from docker to applicationlist
+@app.route('/uptime')
+def server_up():
+    server_up = uptime()
+    return server_up
+
+@app.route('/utilization')
+def utilization():
+    cpu = f"CPU utilization: {psutil.cpu_percent()}%"
+    mem = f" \n Memory utilization: {psutil.virtual_memory().percent}%"
+    return jsonify({'cpu': cpu, 'mem': mem})
+
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -111,6 +152,7 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    apps = get_apps()
     return render_template('dashboard.html', apps=apps)
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -129,17 +171,6 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
-
-@app.route('/uptime')
-def server_up():
-    server_up = uptime()
-    return server_up
-
-@app.route('/utilization')
-def utilization():
-    cpu = f"CPU utilization: {psutil.cpu_percent()}%"
-    mem = f" \n Memory utilization: {psutil.virtual_memory().percent}%"
-    return jsonify({'cpu': cpu, 'mem': mem})
 
 @app.route('/plex')
 def plex():

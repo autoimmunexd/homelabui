@@ -12,11 +12,11 @@ def scrape_wikipedia_main_page():
         # Check if the target div is found
         if target_div:
             # Convert the target div to a string
-            div_string = target_div
-            print(type(div_string))
-            return str(div_string)
+            pretty = str(target_div)
+            with open("wiki_news.html", "w") as file:
+                file.write(pretty)
+                print('WIKI HTML SAVED!')
         else:
             print("Div not found on the page.")
     else:
         print("Failed to retrieve the webpage. Status code:", response.status_code)
-    

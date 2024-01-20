@@ -1,13 +1,15 @@
 {% macro card(app) %}
+
 <div class="col-md-2 mb-3">
+<a href=/{{app['name'] | lower}}>
                             <div class="card border-primary">
                                 <div class="card-body text-center">
                                     <h5 class="card-title">{{ app['name']|lower }}</h5>
-                                    <img src="..." class="card-img-top" alt="...">
-                                    <button>Start</button>
-                                    <button>Stop</button>
+                                    <img src="{{ app['link']|lower }}" class="card-img-top" alt="...">
                                     <p>Status:</p><span class="status"></span>
                                 </div>
                             </div>
-                        </div>         
+                            </a>    
+                        </div>
+                            
 {% endmacro %}

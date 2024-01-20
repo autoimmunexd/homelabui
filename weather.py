@@ -1,4 +1,6 @@
 import requests
+from datetime import datetime
+import json  # Don't forget to import the json module
 
 def get_weather_data():
     base_url = 'https://api.weather.gov/gridpoints/PHI/33,94/forecast'
@@ -29,8 +31,8 @@ def get_weather_data():
             temperature_2 = second_hourly_forecast.get('temperature', 'N/A')
             short_forecast_2 = second_hourly_forecast.get('icon', 'N/A')
             detailed_forecast_2 = second_hourly_forecast.get('detailedForecast', 'N/A')
-            print('Got the data')
-            #turns data back into a list
+            #print('Got the data')
+            # Turns data back into a list
             ui_data = [
                 {
                     "Name": name_1,
@@ -43,10 +45,20 @@ def get_weather_data():
                     "Temperature": temperature_2,
                     "Short Forecast": short_forecast_2,
                     "Detailed Forecast": detailed_forecast_2
-                }
+                },
+                {
+                    "Updated Last": str(datetime.now().strftime("%I:%M %p"))
+                 }
             ]
-            
-            return ui_data
+
+            # Specify the file name
+            file_name = 'static/data/ui_data.json'
+
+            # Save the data as a JSON file
+            with open(file_name, 'w') as json_file:
+                json.dump(ui_data, json_file, indent=2)  # indent for pretty formatting
+
+            print(f'Data saved to {file_name}')
 
         else:
             print("No hourly forecast data available.")

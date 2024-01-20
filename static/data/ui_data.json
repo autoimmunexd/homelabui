@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Today",
+    "Temperature": 22,
+    "Detailed Forecast": "Areas of blowing snow. Mostly cloudy, with a high near 22. Northwest wind 10 to 15 mph.",
+    "Short Forecast": "https://api.weather.gov/icons/land/day/blizzard?size=medium"
+  },
+  {
+    "Name": "Tonight",
+    "Temperature": 16,
+    "Short Forecast": "https://api.weather.gov/icons/land/night/blizzard?size=medium",
+    "Detailed Forecast": "Areas of blowing snow. Mostly cloudy, with a low around 16. Northwest wind 10 to 15 mph."
+  },
+  {
+    "Updated Last": "11:14 AM"
+  }
+]
