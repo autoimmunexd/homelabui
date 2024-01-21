@@ -5,8 +5,9 @@
                             <div class="card border-primary">
                                 <div class="card-body text-center">
                                     <h5 class="card-title">{{ app['name']|lower }}</h5>
-                                    <img src="{{ app['link']|lower }}" class="card-img-top" alt="...">
-                                    <p>Status:</p><span class="status"></span>
+                                    <img src="{{ app['link']|lower}}" class="card-img-top" alt="">
+                                    <p>Status :</p>
+                                    <div class="status {{ 'running' if app['status'] == 'running' else 'exited' if app['status'] == 'exited' else '' }}"></div>
                                 </div>
                             </div>
                             </a>    

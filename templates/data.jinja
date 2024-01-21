@@ -1,4 +1,4 @@
-{% macro data(server_up) %}
+{% macro data(server_up, bandwidth_data) %}
     
         <div class="row">
             <table id="data" class="table table-striped text-center">
@@ -17,7 +17,7 @@
                         <td id="cpu"></td>
                         <td id="memory"></td>
                         <td id="storage"></td>
-                        <td id="band"></td>
+                        <td id="band">{{bandwidth_data}}</td>
                         <td></td>
                     </tr>
                 </tbody>

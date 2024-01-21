@@ -15,10 +15,25 @@ body {
     padding: 0px !important;
 }
 
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: white;
+}
+
 .card {
     border: none !important;
     background-color: #1F2937;
     transition: transform 0.2s;
+    min-width: 250px;
+    min-width: 250px;
+
+    max-height: 250px;
+    max-width: 250px;
 }
 
 .card img {
@@ -33,13 +48,28 @@ body {
 #data {
     color: white;
 }
-
 .status {
     height: 15px;
     width: 15px;
-    background-color: red;
     border-radius: 50%;
     display: inline-block;
+}
+
+.status.running {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: green !important;
+}
+
+
+.status.exited {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: red !important;
 }
 
 .card:hover {

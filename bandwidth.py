@@ -1,24 +1,46 @@
 import psutil
 import time
 
+def get_size(bytes):
+    """
+    Returns size of bytes in a nice format
+    """
+    for unit in ['', 'K', 'M', 'G', 'T', 'P']:
+        if bytes < 1024:
+            return f"{bytes:.2f}{unit}B"
+        bytes /= 1024
+
 def get_bandwidth():
-    # Get the network interfaces
-    interfaces = psutil.net_io_counters(pernic=True)
+    UPDATE_DELAY = 1  # in seconds
 
-    # Sleep for a short time
-    time.sleep(1)
+    # get the network I/O stats from psutil
+    io = psutil.net_io_counters()
+    # extract the total bytes sent and received
+    bytes_sent, bytes_recv = io.bytes_sent, io.bytes_recv
 
-    # Get the network interfaces again after sleeping
-    interfaces_after = psutil.net_io_counters(pernic=True)
-
-    # Calculate bandwidth usage for each interface
+    # create a dictionary to store bandwidth information
     bandwidth = {}
-    for interface, stats_before in interfaces.items():
-        stats_after = interfaces_after[interface]
-        sent_bytes = stats_after.bytes_sent - stats_before.bytes_sent
-        recv_bytes = stats_after.bytes_recv - stats_before.bytes_recv
-        sent_speed = sent_bytes / 1024 / 1024  # Convert to MB
-        recv_speed = recv_bytes / 1024 / 1024  # Convert to MB
-        bandwidth[interface] = {'sent_speed': sent_speed, 'recv_speed': recv_speed}
-    print(bandwidth)
-    return bandwidth
+
+    while True:
+        # sleep for `UPDATE_DELAY` seconds
+        time.sleep(UPDATE_DELAY)
+        # get the stats again
+        io_2 = psutil.net_io_counters()
+        # new - old stats get us the speed
+        us, ds = io_2.bytes_sent - bytes_sent, io_2.bytes_recv - bytes_recv
+
+        # store bandwidth information in the dictionary
+        bandwidth['upload'] = get_size(io_2.bytes_sent)
+        bandwidth['download'] = get_size(io_2.bytes_recv)
+        bandwidth['upload_speed'] = get_size(us / UPDATE_DELAY) + '/s'
+        bandwidth['download_speed'] = get_size(ds / UPDATE_DELAY) + '/s'
+
+        # update the bytes_sent and bytes_recv for the next iteration
+        bytes_sent, bytes_recv = io_2.bytes_sent, io_2.bytes_recv
+
+        # return the bandwidth dictionary
+        return bandwidth
+
+# Uncomment the line below if you want to actually call the function
+# bandwidth_info = get_bandwidth()
+# print(bandwidth_info)

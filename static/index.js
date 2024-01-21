@@ -1,18 +1,45 @@
-$(document).ready(() => {
+document.addEventListener("DOMContentLoaded", function() {
+    // Select all image elements on the page
+    var images = document.querySelectorAll('img');
 
+    // Iterate over each image
+    images.forEach(function(image) {
+        // Attach the onerror event handler to each image
+        image.onerror = function() {
+            // Replace the source with the URL of the default image
+            image.src = "static/arch.svg";
+            // Optionally, set an alt attribute for the default image
+            image.alt = "Default Image";
+        };
+    });
+});
+
+$(document).ready(() => {
     const fetchBandwidth = () => {
         $.ajax({
             url: '/bandwidth',
             type: 'GET',
             success: (data) => {
                 // Update DOM element with converted data
-                $('#band').text(JSON.stringify(data.eth0));
+                console.log(data)
+                $('#band').text(JSON.stringify(data));
             },
             error: (error) => {
                 console.error('Error:', error);
             }
         });
     };
+    // const cards = document.querySelectorAll('.card');
+
+    // cards.forEach(card => {
+    //     let cardImage = card.querySelector('img');
+    //     if (!cardImage) {
+    //         let defaultImage = document.createElement('img');
+    //         defaultImage.src = 'tux.svg';
+    //         defaultImage.alt = 'Default Image';
+    //         card.appendChild(defaultImage);
+    //     }
+    // });
 
     // Function to fetch uptime and update DOM every second
     const fetchUptime = () => {
@@ -64,10 +91,30 @@ $(document).ready(() => {
             }
         });
     };
+    
+    const updateTime = () => {
+        let time = new Date();
+        const formattedTime = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        $('#time').text(formattedTime);
+    }
 
-    //on page load
+    function importHTML(url, targetDivId) {
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                // Set the innerHTML of the target div
+                document.getElementById(targetDivId).innerHTML = html;
+            })
+            .catch(error => console.error('Error fetching HTML:', error));
+    }
     fetchData();
+
     updateWeatherData();
+
+    importHTML('static/data/wiki_news.html', 'content-container');
+    
+    //time update interval
+    setInterval(updateTime, 1000)
     //interval timers for live data
     setInterval(fetchBandwidth, 5000)
     // Fetch uptime every second

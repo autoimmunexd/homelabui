@@ -8,10 +8,10 @@ def get_apps():
     apps = []
 
     # Get the list of all running containers
-    running_containers = client.containers.list()
+    all_containers = client.containers.list(all)
 
     # Loop through each running container
-    for container in running_containers:
+    for container in all_containers:
         # Get the name, status, and the ports of the container
         name = container.name
         status = container.status
@@ -21,7 +21,7 @@ def get_apps():
         container_dict = {
             "name": name,
             "status": status,
-            "link": f"/static/{name.lower()}.png",  # Assuming PNG file format
+            "link": f"/static/{name.lower()}.svg",  # Assuming PNG file format
             "port": None  # Placeholder for port, to be updated below
         }
 
@@ -34,5 +34,5 @@ def get_apps():
 
         # Add the container dictionary to the list
         apps.append(container_dict)
-
+        print(apps)
     return apps

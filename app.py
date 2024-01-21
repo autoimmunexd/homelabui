@@ -23,6 +23,7 @@ from bandwidth import get_bandwidth
 from scrape import scrape_wikipedia_main_page
 from storage import storage
 from weather import get_weather_data
+from bandwidth import get_bandwidth
 # TO DO LIST :
 #   - time day date
 #   - pass data from docker to application list
@@ -162,7 +163,8 @@ def login():
 @login_required
 def dashboard():
     apps = get_apps()
-    return render_template('dashboard.html', apps=apps)
+    bandwidth_data = get_bandwidth()
+    return render_template('dashboard.html', apps=apps, bandwidth_data=bandwidth_data)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
